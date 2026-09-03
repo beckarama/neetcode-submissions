@@ -1,0 +1,43 @@
+class Solution:
+    def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+        ROWS, COLS = len(heights), len(heights[0])
+        atlantic, pacific = set(), set()
+        directions = [[0,1], [0,-1], [1,0], [-1,0]]
+
+        def bfs(source, ocean):
+            q = deque(source)
+
+            while q:
+                r, c = q.popleft()
+                ocean.add((r,c))
+
+                for dr, dc in directions:
+                    nr, nc = r + dr, c + dc
+
+                    if min(nr, nc) >= 0 and nr != ROWS and nc != COLS and (nr, nc) not in ocean and heights[nr][nc] >= heights[r][c]:
+                        q.append((nr, nc))
+
+                
+        atl = []
+        pac = []
+
+        for r in range(ROWS):
+            atl.append((r, 0))
+            pac.append((r, COLS - 1))
+        
+        for c in range(COLS):
+            atl.append((0, c))
+            pac.append((ROWS - 1, c))
+        
+        bfs(atl, atlantic)
+        bfs(pac, pacific)
+
+        res = []
+        for r, c in atlantic:
+            if (r, c) in pacific:
+                res.append([r,c])
+        return res
+        
+
+
+        
